@@ -16,9 +16,28 @@ import (
 
 // 数据上链
 func UpLoad(c *gin.Context) {
-	//
 	// 数据上链
 	res, err := upLoad(c)
+	//  err
+	if err != nil {
+		c.JSON(http.StatusOK,
+			gin.H{
+				"status": "fail",
+				"data":   res,
+			})
+	} else {
+		// OK
+		c.JSON(
+			http.StatusOK,
+			gin.H{"status": "success",
+				"data": res,
+			})
+	}
+	return
+}
+func UpLoadliu(c *gin.Context) {
+
+	res, err := uploadInfo(c)
 
 	//  err
 	if err != nil {
@@ -36,6 +55,65 @@ func UpLoad(c *gin.Context) {
 			})
 	}
 	return
+
+}
+func uploadInfo(c *gin.Context) (result string, err error) {
+	data, err := Serialize1(c)
+	if err != nil {
+		log.Println("解析数据失败：", err)
+	}
+	//
+	log.Println("序列化成功：", data)
+	//数据上链
+	chaincode1, err := UploadByChaincode1(data.ChainCodeName, data.ChannelName, data.FunctionName, data.Assets)
+
+	// 调用上链
+	if err != nil {
+		log.Println("数据上链", err)
+	}
+	return chaincode1, err
+}
+func UploadByChaincode1(channelName string, chaincodeName string, funcName string, asset Asset) (result string, err error) {
+
+	var peerlist []string
+	peerlist = append(peerlist, "peer0.org1.bookstore.com")
+	peerlist = append(peerlist, "peer0.org2.bookstore.com")
+	peerlist = append(peerlist, "peer1.org1.bookstore.com")
+	peerlist = append(peerlist, "peer1.org2.bookstore.com")
+
+	split, err := ArgsSplit(&asset)
+
+	request := channel.Request{
+		ChaincodeID: chaincodeName,
+		Fcn:         funcName,
+		Args:        split,
+	}
+	// 上链
+	response, err := m.App.SDK.Client.Execute(request,
+		channel.WithRetry(retry.DefaultChannelOpts),
+		channel.WithTargetEndpoints(peerlist...),
+	)
+
+	if nil != err {
+		return "", err
+	} else {
+		return string(response.Payload), nil
+	}
+}
+func ArgsSplit(ass *Asset) (res [][]byte, err error) {
+
+	res = append(res, []byte(ass.AssetId))
+	res = append(res, []byte(ass.CargoName))
+	res = append(res, []byte(ass.CargoPrice))
+	res = append(res, []byte(ass.CargoAmount))
+	res = append(res, []byte(ass.ContractId))
+	res = append(res, []byte(ass.ProviderId))
+	res = append(res, []byte(ass.ProviderName))
+	res = append(res, []byte(ass.CreateTime))
+	res = append(res, []byte(ass.CreateUser))
+	res = append(res, []byte(ass.UserDetail))
+	res = append(res, []byte(ass.CargoAddress))
+	return res, nil
 }
 
 // 数据上链
@@ -70,6 +148,15 @@ func Load(c *gin.Context) {
 //
 // 序列化 数据
 func Serialize(c *gin.Context) (data *ChainDb, err error) {
+
+	if err := c.ShouldBindJSON(&data); err != nil {
+		return data, err
+	}
+	return data, nil
+}
+
+// 序列化 数据
+func Serialize1(c *gin.Context) (data *AssetChaincode, err error) {
 
 	if err := c.ShouldBindJSON(&data); err != nil {
 		return data, err

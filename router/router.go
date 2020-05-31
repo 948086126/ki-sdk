@@ -37,6 +37,16 @@ func InitRouter() *g.Engine {
 			//  查询
 			wei.POST("/query", c.Load)
 		}
+		liu := v1.Group("/liu")
+
+		// 数据上链
+		{
+			// 上链
+			liu.POST("/upliu", c.UpLoadliu)
+
+			//  查询
+			liu.POST("/queryliu", c.Load)
+		}
 
 		return router
 	}
