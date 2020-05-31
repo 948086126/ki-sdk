@@ -77,9 +77,9 @@ func UploadByChaincode1(channelName string, chaincodeName string, funcName strin
 
 	var peerlist []string
 	peerlist = append(peerlist, "peer0.org1.bookstore.com")
-	peerlist = append(peerlist, "peer0.org2.bookstore.com")
-	peerlist = append(peerlist, "peer1.org1.bookstore.com")
-	peerlist = append(peerlist, "peer1.org2.bookstore.com")
+	//peerlist = append(peerlist, "peer0.org2.bookstore.com")
+	//peerlist = append(peerlist, "peer1.org1.bookstore.com")
+	//peerlist = append(peerlist, "peer1.org2.bookstore.com")
 
 	split, err := ArgsSplit(&asset)
 

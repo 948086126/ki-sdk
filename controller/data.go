@@ -14,7 +14,7 @@ type AssetChaincode struct {
 	Assets        Asset  `json:"assets"`
 }
 type Asset struct {
-	AssetId      string `json:"Asset_id"`
+	AssetId      string `json:"asset_id"`
 	CargoName    string `json:"cargo_name"`
 	CargoPrice   string `json:"cargo_price"`
 	CargoAmount  string `json:"cargo_amount"`
