@@ -65,7 +65,8 @@ func uploadInfo(c *gin.Context) (result string, err error) {
 	//
 	log.Println("序列化成功：", data)
 	//数据上链
-	chaincode1, err := UploadByChaincode1(data.ChainCodeName, data.ChannelName, data.FunctionName, data.Assets)
+	//chaincode1, err := UploadByChaincode1(data.ChainCodeName, data.ChannelName, data.FunctionName, data.Assets)
+	chaincode1, err := UploadByChaincode1(data.ChannelName, data.ChainCodeName, data.FunctionName, data.Assets)
 
 	// 调用上链
 	if err != nil {
