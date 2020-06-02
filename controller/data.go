@@ -26,3 +26,9 @@ type Asset struct {
 	UserDetail   string `json:"user_detail"`
 	CargoAddress string `json:"cargo_address"`
 }
+type GoodsChaincode struct {
+	ChannelName   string   `json:"channelName"`
+	ChainCodeName string   `json:"chainCodeName"`
+	FunctionName  string   `json:"functionName"`
+	Data          []string `json:"data"`
+}
